@@ -1,5 +1,4 @@
 import cv2
-import matplotlib.pyplot as plt
 
 cap = cv2.VideoCapture(0) # choose webcam oject with 0, if only one webcam is available
 cap.set(3,640) # set height, whose id is 3 in setting
