@@ -54,7 +54,7 @@ def to_jpg(ori_img:str):
 def test_img(img_path:str,scale:int):
     ### get original image
     image = cv2.imread(img_path)
-    H,W,C = image.shape
+    H,W,_ = image.shape
     image = cv2.resize(image,(int(W/scale),int(H/scale)))
     print(f'original image shape: {image.shape}')
     ### some variants
