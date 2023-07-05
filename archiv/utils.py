@@ -45,6 +45,12 @@ def plot_in_one_window(img_lst:list):
             final_image[h*row:h*(row+1),w*col:w*(col+1)] = img
     return final_image
 
+def to_jpg(ori_img:str):
+    img = cv2.imread(ori_img)
+    cv2.imwrite('{}.jpg'.format(ori_img.split('.')[0]),
+                img,
+                [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+
 def test_img(img_path:str,scale:int):
     ### get original image
     image = cv2.imread(img_path)
