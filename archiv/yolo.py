@@ -7,17 +7,22 @@ cap.set(4,480) # set width, whose id is 4 in setting
 cap.set(10,20) # set brightness, whose id is 10 in setting
 
 whT = 320 # width-height-Target, 320 because the configuration from website is of size 320x320
-confThreshold = 0.5 # if confidence larger than confThreshold, then it is considered to be classified to this class
+confThreshold = 0.5 # if confidence larger than confThreshold, then we keep the bounding box
+nmsThreshold = 0.3 # the lower nmsThreshold is, the less boxes we will get, i.e. more boxes would be suppressed
 
 classesFile = 'coco.names'
 classNames = []
 with open(classesFile,'rt') as F:
-    classesNames = F.read().rstrip('\n').split('\n')
-# print(classesNames)
+    classNames = F.read().rstrip('\n').split('\n')
+# print(classNames)
 # print(f'We have {len(classNames)} classes')
 
-modelConfiguration = 'yolov3.cfg'
-modelWeights = 'yolov3.weights'
+## yolo-320
+# modelConfiguration = 'yolov3.cfg'
+# modelWeights = 'yolov3.weights'
+## yolo-tiny
+modelConfiguration = 'yolov3-tiny.cfg'
+modelWeights = 'yolov3-tiny.weights'
 
 ### create network
 net = cv2.dnn.readNetFromDarknet(modelConfiguration,modelWeights)
@@ -41,6 +46,13 @@ def findObjects(outputs,img):
                 classIds.append(classId)
                 confs.append(float(confidence))
     print(f'We have {len(bbox)} bounding boxes')
+    indices = cv2.dnn.NMSBoxes(bbox,confs,confThreshold, nmsThreshold) # Non-Maximum Suppression, output is indices to keep
+    print(f'We keep these boxes, whose index are: {indices}')
+    for i in indices:
+        box = bbox[i]
+        x,y,w,h = box
+        cv2.rectangle(img,pt1=(x,y),pt2=(x+w,y+h),color=(255,0,255),thickness=2)
+        cv2.putText(img,f'{classNames[classIds[i]]} {int(confs[i]*100)}%',(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,0,255),2)
 
 while True:
     success, img = cap.read() # read frames one by one, return img and whether it is successful
