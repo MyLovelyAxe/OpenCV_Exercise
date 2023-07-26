@@ -51,8 +51,18 @@ def findObjects(outputs,img):
     for i in indices:
         box = bbox[i]
         x,y,w,h = box
-        cv2.rectangle(img,pt1=(x,y),pt2=(x+w,y+h),color=(255,0,255),thickness=2)
-        cv2.putText(img,f'{classNames[classIds[i]]} {int(confs[i]*100)}%',(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,0,255),2)
+        cv2.rectangle(img,
+                      pt1=(x,y),
+                      pt2=(x+w,y+h),
+                      color=(255,0,255),
+                      thickness=2)
+        cv2.putText(img,
+                    text=f'{classNames[classIds[i]]} {int(confs[i]*100)}%',
+                    org=(x,y-10),
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                    fontScale=0.6,
+                    color=(255,0,255),
+                    thickness=2)
 
 while True:
     success, img = cap.read() # read frames one by one, return img and whether it is successful
