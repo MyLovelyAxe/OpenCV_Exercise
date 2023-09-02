@@ -61,7 +61,7 @@ class CNNBlock(nn.Module):
 
 class ResidualBlock(nn.Module):
     def __init__(self,
-                 channels,
+                 in_channels,
                  num_repeats=1,
                  use_residual=True
                  ):
@@ -73,8 +73,12 @@ class ResidualBlock(nn.Module):
         for _ in range(self.num_repeats):
             self.layers += [
                 nn.Sequential(
-                    CNNBlock(channels, channels//2, kernel_size=1), # reduce filter number
-                    CNNBlock(channels//2, channels, kernel_size=3, padding=1) # restore filter number
+                    CNNBlock(in_channels=in_channels,
+                             out_channels=in_channels//2,
+                             kernel_size=1), # reduce filter number
+                    CNNBlock(in_channels=in_channels//2,
+                             out_channels=in_channels,
+                             kernel_size=3, padding=1) # restore filter number
                 )
             ]
 
@@ -102,8 +106,14 @@ class ScalePrediction(nn.Module):
         super().__init__()
         self.num_classes = num_classes
         self.pred = nn.Sequential(
-            CNNBlock(in_channels, 2*in_channels, kernel_size=3, padding=1),
-            CNNBlock(2*in_channels, 3*(self.num_classes+5), bn_act=False, kernel_size=1),
+            CNNBlock(in_channels=in_channels,
+                     out_channels=2*in_channels,
+                     kernel_size=3,
+                     padding=1),
+            CNNBlock(in_channels=2*in_channels,
+                     out_channels=3*(self.num_classes+5),
+                     bn_act=False,
+                     kernel_size=1),
         )
     
     def forward(self, x):
@@ -147,8 +157,6 @@ class YOLOv3(nn.Module):
                 route_connections.pop()
         return output
 
-
-
     def _create_conv_layers(self):
         layers = nn.ModuleList()
         in_channels = self.in_channels # 1st in_channels
@@ -159,8 +167,8 @@ class YOLOv3(nn.Module):
                 out_channels, kernel_size, stride = module
                 layers.append(
                     CNNBlock(
-                        in_channels,
-                        out_channels,
+                        in_channels=in_channels,
+                        out_channels=out_channels,
                         kernel_size=kernel_size,
                         stride=stride,
                         padding=1 if kernel_size==3 else 0,
@@ -173,8 +181,7 @@ class YOLOv3(nn.Module):
                 num_repeats = module[1]
                 layers.append(
                     ResidualBlock(
-                        in_channels,
-                        # num_repeats,
+                        in_channels=in_channels,
                         num_repeats=num_repeats,
                     )
                 )
@@ -183,9 +190,14 @@ class YOLOv3(nn.Module):
             elif isinstance(module, str):
                 if module == "S":
                     layers += [
-                        ResidualBlock(in_channels, use_residual=False, num_repeats=1),
-                        CNNBlock(in_channels, in_channels//2, kernel_size=1),
-                        ScalePrediction(in_channels//2, num_classes=self.num_classes)
+                        ResidualBlock(in_channels=in_channels,
+                                      num_repeats=1,
+                                      use_residual=False),
+                        CNNBlock(in_channels=in_channels,
+                                 out_channels=in_channels//2,
+                                 kernel_size=1),
+                        ScalePrediction(in_channels=in_channels//2,
+                                        num_classes=self.num_classes)
                     ]
                     in_channels = in_channels//2
                 elif module == "U":
@@ -196,6 +208,7 @@ class YOLOv3(nn.Module):
     
 
 if __name__ == "__main__":
+    
     num_classes = 20
     IMAGE_SIZE = 416
     model = YOLOv3(in_channels=3,num_classes=num_classes)
