@@ -8,3 +8,6 @@ https://github.com/pjreddie/darknet/blob/master/data/coco.names
 
 yolov3-related files are downloaded from here:
 https://pjreddie.com/darknet/yolo/
+
+yolov3-pytorch config files:
+https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg
