@@ -11,7 +11,8 @@
 # C0209: consider-using-f-string
 # C0303: trailing-whitespace
 # W0621: redefined-outer-name
-disable = C0103,C0111,C0301,W1514,W1309,C0209,C0303,W0621
+# W0105: pointless-string-statement
+disable = C0103,C0111,C0301,W1514,W1309,C0209,C0303,W0621,W0105
 
 [TYPECHECK]
 # List of members which are set dynamically and missed by Pylint inference
