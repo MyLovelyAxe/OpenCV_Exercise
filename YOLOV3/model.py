@@ -126,7 +126,7 @@ class ScalePrediction(nn.Module):
 
 class YOLOv3(nn.Module):
     def __init__(self,
-                 in_channels,
+                 in_channels=3,
                  num_classes=20):
         super().__init__()
         self.in_channels = in_channels

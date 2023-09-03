@@ -1,4 +1,4 @@
-# import config
+import config
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
@@ -8,7 +8,7 @@ import torch
 
 from collections import Counter
 from torch.utils.data import DataLoader
-# from tqdm import tqdm
+from tqdm import tqdm
 
 
 def iou_width_height(boxes1, boxes2):
@@ -443,7 +443,7 @@ def load_checkpoint(checkpoint_file, model, optimizer, lr):
 
 
 def get_loaders(train_csv_path, test_csv_path):
-    from YOLOV3 import YOLODataset
+    from dataset import YOLODataset
 
     IMAGE_SIZE = config.IMAGE_SIZE
     train_dataset = YOLODataset(

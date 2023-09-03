@@ -46,7 +46,7 @@ class YoloLoss(nn.Module):
         box_preds = torch.cat([self.sigmoid(predictions[...,1:3]),torch.exp(predictions[...,3:5]*anchors)], dim=-1)
         iou = intersection_over_union(box_preds[obj],targets[obj]).detach()
         object_loss = self.bce(
-            predictions[...,0:1][obj], iou*targets[..., 0:1][noobj]
+            predictions[...,0:1][obj], iou*targets[..., 0:1][obj]
         )
 
         ### Box Coordinate Loss
@@ -59,7 +59,8 @@ class YoloLoss(nn.Module):
 
         ### Class Loss
         class_loss = self.entropy(
-            predictions[...,5][obj], targets[...,5][obj].long()
+            # predictions[...,5][obj], targets[...,5][obj].long()
+            predictions[...,5][obj], targets[...,5][obj]
         )
 
         return (
