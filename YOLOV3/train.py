@@ -75,8 +75,8 @@ def main():
     scaler = torch.cuda.amp.GradScaler()
 
     train_loader, test_loader, train_eval_loader = get_loaders(
-        train_csv_path = config.DATASET+"/100examples.csv",
-        test_csv_path = config.DATASET+"/100examples.csv",
+        train_csv_path = config.DATASET+"/8examples.csv",
+        test_csv_path = config.DATASET+"/8examples.csv",
     )
 
     if config.LOAD_MODEL:

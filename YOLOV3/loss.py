@@ -13,9 +13,9 @@ class YoloLoss(nn.Module):
 
         # constants: what are these
         self.lambda_class = 1
-        self.lambda_noobj = 10 # value no-object more
+        self.lambda_noobj = 1 # value no-object more
         self.lambda_obj = 1
-        self.lambda_box = 10 # value box more
+        self.lambda_box = 1 # value box more
 
     def forward(self, predictions, targets, anchors):
         """
@@ -44,9 +44,9 @@ class YoloLoss(nn.Module):
         # "anchors" contains the widths and heights of anchors
         anchors = anchors.reshape(1,3,1,1,2) # in order to be compatible with formula: e.g. bw = pw * exp(tw)
         box_preds = torch.cat([self.sigmoid(predictions[...,1:3]),torch.exp(predictions[...,3:5]*anchors)], dim=-1)
-        iou = intersection_over_union(box_preds[obj],targets[obj]).detach()
-        object_loss = self.bce(
-            predictions[...,0:1][obj], iou*targets[..., 0:1][obj]
+        iou = intersection_over_union(box_preds[obj],targets[..., 1:5][obj]).detach()
+        object_loss = self.mse(
+            self.sigmoid(predictions[...,0:1][obj]), iou*targets[..., 0:1][obj]
         )
 
         ### Box Coordinate Loss
@@ -59,8 +59,7 @@ class YoloLoss(nn.Module):
 
         ### Class Loss
         class_loss = self.entropy(
-            # predictions[...,5][obj], targets[...,5][obj].long()
-            predictions[...,5][obj], targets[...,5][obj]
+            predictions[...,5:][obj], targets[...,5][obj].long()
         )
 
         return (

@@ -34,14 +34,22 @@ def findObjects(outputs,img):
     bbox = [] # contain: Cx,Cy,w,h
     classIds = []
     confs = [] # confidence
+    # output[0], output[1], output[2] means output of 3 different scales,
+    # i.e. output[0]: whT / 32 = 10, shape: [3, 10, 10, 85] -> [3*10*10, 85] -> [300, 85]
+    # i.e. output[1]: whT / 16 = 20, shape: [3, 20, 20, 85] -> [3*20*20, 85] -> [1200, 85]
+    # i.e. output[2]: whT / 8 = 40, shape: [3, 40, 40, 85] -> [3*40*40, 85] -> [4800, 85]
+    # which means [num_anchor_each_scale, scale_size, scale_size, pred_vector]
+    # num_anchor_each_scale=3, because yolo algorithm in paper designed 3 anchors for each of 3 scales
     for output in outputs: # 3 outputs: [300,85], [1200,85], [4800,85]
         for det in output: # det: [85,]
             scores = det[5:] # neglect first 5 values
             classId = np.argmax(scores) # find the id of the class with highest confidence
             confidence = scores[classId] # get that confidence
             if confidence > confThreshold:
-                w,h = int(det[2]*wT), int(det[3]*hT) # e.g. det[2] is percentage, det[2]*wT is pixel-value
-                x,y = int((det[0]*wT) - w/2), int((det[1]*hT) - h/2) # e.g. det[0] is percentage of center_x, int((det[0]*wT) - w/2) is pixel value of upper-left corner
+                # e.g. det[2] is percentage, det[2]*wT is pixel-value
+                w,h = int(det[2]*wT), int(det[3]*hT)
+                # e.g. det[0] is percentage of center_x, int((det[0]*wT) - w/2) is pixel value of upper-left corner 
+                x,y = int((det[0]*wT) - w/2), int((det[1]*hT) - h/2)
                 bbox.append([x,y,w,h])
                 classIds.append(classId)
                 confs.append(float(confidence))
