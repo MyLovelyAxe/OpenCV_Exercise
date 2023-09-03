@@ -20,7 +20,7 @@ class YOLODataset(Dataset):
                  img_dir,
                  label_dir,
                  anchors,
-                 image_size=416,
+                #  image_size=416,
                  S=[13,26,52], # Scales of cell, e.g. S=13, there are 13x13 cells in one output image
                  C=20, # number of classes
                  transform=None):
@@ -29,7 +29,7 @@ class YOLODataset(Dataset):
         self.label_dir = label_dir
         self.transform = transform
         self.S = S
-        # put all anchors with 3 scales together
+        # put all anchors with 3 scales together, check config.py to see what does anchors look like
         self.anchors = torch.tensor(anchors[0] + anchors[1] + anchors[2])
         self.num_anchors = self.anchors.shape[0]
         self.num_anchors_per_scale = self.num_anchors // 3
@@ -69,6 +69,7 @@ class YOLODataset(Dataset):
             anchor_indices = iou_anchors.argsort(descending=True,dim=0)
             x, y, width, height, class_label = box
             # whether has anchor or not for each of 3 scale
+            # each scale should have 1 anchor
             has_anchor = [False,False,False]
 
             for anchor_idx in anchor_indices:
@@ -92,6 +93,16 @@ class YOLODataset(Dataset):
                 # so anchor_taken means whether this cell has object, i.e. prob of whether there is object
                 anchor_taken = targets[scale_idx][anchor_on_scale, i, j, 0]
 
+                # attention:
+                #    because the iou_anchors was already sorted with descending order
+                #    this first anchor which is taken for a particular scale
+                #    must be the one with largest iou, i.e. most compatible with box (ground truth)
+                #    so first "if" is to get the first largest-iou anchor
+                #    second "elif" means after we already have a largest-iou anchor, i.e. the most suitable one
+                #    if there is another anchor which also has too large iou, we consider it as repeatition
+                #    which can also present the same object (ground truth box) but not as optimal as the first one
+                #    then discard/ignore it, i.e. set prob=-1
+
                 # make sure
                 #   1) the anchor hasn't been taken, (ps: originally prob of each anchor is 0)
                 #   2) we haven't already had an anchor on this particular scale for this bbox
@@ -108,6 +119,7 @@ class YOLODataset(Dataset):
                     targets[scale_idx][anchor_on_scale, i, j, 1:5] = box_coordinates
                     # set label of target
                     targets[scale_idx][anchor_on_scale, i, j, 5] = int(class_label)
+                    has_anchor[scale_idx] = True
 
                 # make sure:
                 #   1) the anchor hasn't been taken, (ps: originally prob of each anchor is 0)

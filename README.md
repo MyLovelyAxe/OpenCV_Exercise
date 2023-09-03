@@ -14,6 +14,6 @@ The tutorial video is [here](https://www.youtube.com/watch?v=Grir6TZbc1M) and co
 
 | File | Download address |
 |--|--|
-| config | https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg |
+| darknet original config | https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg |
 | PASCAL VOC dataset | https://www.kaggle.com/datasets/aladdinpersson/pascal-voc-dataset-used-in-yolov3-video?resource=download-directory |
 | COCO-YOLOv3 dataset | https://www.kaggle.com/datasets/79abcc2659dc745fddfba1864438afb2fac3fabaa5f37daa8a51e36466db101e |
