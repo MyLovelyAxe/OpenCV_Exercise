@@ -1,6 +1,6 @@
 import os
-import cv2
 import argparse
+import cv2
 import numpy as np
 import torch
 from torchvision import models
@@ -12,6 +12,7 @@ This script is a prototype of:
     2. save trained model as .noox file
     3. load .noox into OpenCV
     4. under framework of OpenCV, deploy the trained model for e.g. image classification, object detection .etc
+The original tutorial of OpenCV: 
 """
 
 def get_args():

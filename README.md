@@ -21,3 +21,16 @@ The tutorial video is [here](https://www.youtube.com/watch?v=Grir6TZbc1M) and co
 ### PytorchModel2OpenCV:
 The official tutorial of OpenCV is [here](https://docs.opencv.org/4.x/dc/d70/pytorch_cls_tutorial_dnn_conversion.html)
 The **classification_classes_ILSVRC2012.txt** can be downloaded from [this repo](https://github.com/opencv/opencv/blob/4.x/samples/data/dnn/classification_classes_ILSVRC2012.txt)
+
+### SSDOpenCV:
+The code is from this [post](https://medium.com/featurepreneur/object-detection-using-single-shot-multibox-detection-ssd-and-opencvs-deep-neural-network-dnn-d983e9d52652)
+The corresponding configuration of network can be accessed here:
+
+| File | Download address |
+|--|--|
+| prototxt | https://github.com/chuanqi305/MobileNet-SSD/blob/master/voc/MobileNetSSD_deploy.prototxt |
+| CAFFE model | https://github.com/PINTO0309/MobileNet-SSD-RealSense/blob/master/caffemodel/MobileNetSSD/MobileNetSSD_deploy.caffemodel |
+| gif file | save from the [post](https://medium.com/featurepreneur/object-detection-using-single-shot-multibox-detection-ssd-and-opencvs-deep-neural-network-dnn-d983e9d52652) directly |
+
+
+PS: **CAFFE** means Convolutional Architecture for Fast Feature Embedding
