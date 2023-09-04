@@ -36,6 +36,7 @@ def main():
     model = YOLO(args.weights)
     classNames = getClassNames(args.classes_file)
     cap = getCap()
+
     while True:
         # read frames one by one, return img and whether it is successful
         success, img = cap.read()
@@ -49,7 +50,7 @@ def main():
                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                 confidence = math.ceil((box.conf[0])*100)/100
                 classId = int(box.cls[0])
-                print(f'x1:{x1}, y1:{y1}, x2:{x2}, y2:{y2}')
+                # print(f'x1:{x1}, y1:{y1}, x2:{x2}, y2:{y2}')
                 # mark out the detected object
                 cv2.rectangle(img,
                             pt1=(x1,y1),
