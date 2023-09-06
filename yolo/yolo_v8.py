@@ -10,7 +10,7 @@ def get_args():
     parser.add_argument('--webcam',type=bool,default=False,help='whether to use webcam')
     parser.add_argument('--classes_file',type=str,default='coco.names',help='original file containing names of classes')
     parser.add_argument('--weights',type=str,default='yolov8n.pt',
-                        choices=['yolov8n.pt','yolov8m.pt','yolov8l.pt'],
+                        choices=['yolov8n.pt','yolov8m.pt','yolov8l.pt','yolov8n-pose.pt','yolov8n-seg.pt'],
                         help='n: nano verison; m: medium verison; l: large verison;')
     args = parser.parse_args()
     return args
@@ -34,6 +34,7 @@ def main():
 
     args = get_args()
     model = YOLO(args.weights)
+    model.info()
     classNames = getClassNames(args.classes_file)
     cap = getCap()
 
